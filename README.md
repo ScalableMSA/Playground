@@ -5,8 +5,8 @@
   - **백엔드** : 비즈니스 로직을 최소화한; Redis 이용한 캐싱, spring security
   - **프론트** : 데이터·작동 확인을 위한 최소한의 구성
 - 개발인원
-  - 이대근 [github](github.com/dgun52)
-  - 김소이 [github](github.com/soy9)
+  - 이대근 [github](https://github.com/DGUN52)
+  - 김소이 [github](https://github.com/soy9)
 
 
 # changelog
