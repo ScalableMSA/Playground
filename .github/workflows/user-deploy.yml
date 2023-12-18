@@ -33,7 +33,9 @@ jobs:
           distribution: 'adopt'
           
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: echo "cur pwd $pwd"
+          echo "cur ls $ls"
+          chmod +x gradlew
       
       - name: Build with Gradle
         run: ./gradlew clean build
