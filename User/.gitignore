@@ -39,7 +39,6 @@ out/
 ##추가
 .idea
 gradle/
-gradlew
 gradlew.bat
 ../.idea/
 src/main/resources/
