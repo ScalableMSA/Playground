@@ -44,7 +44,7 @@ jobs:
           echo "MAKING PROPERTIES"
           echo "${{ secrets.YML }}" >> ./application.properties
           cat application.properties
-          echo "${{ secrets.ROOT_PASSWORD }}" #FOR TEST
+          echo "${{ secrets.MYSQL_RDS.ROOT_PASSWORD }}" #FOR TEST
 
       - name: configure for MySQL
         uses: mirromutth/mysql-action@v1.1
