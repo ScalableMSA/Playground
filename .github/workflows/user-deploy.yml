@@ -39,6 +39,8 @@ jobs:
           cd User/src/main/resources
           touch ./application.properties
 
+          pwd
+          ls -a
           echo "MAKING PROPERTIES"
           echo "${{ secrets.YML }}" >> ./application.properties
           cat application.properties
