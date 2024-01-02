@@ -34,17 +34,15 @@ jobs:
           
       - name: Grant execute permission for gradlew
         run: |
-          ls
-          ls -a
           cd User
-          echo "cur pwd $PWD"
-          pwd
-          ls
-          ls -a
           chmod +x gradlew
       
       - name: Build with Gradle
-        run: ./gradlew clean build
+        run: |
+          echo "@@current directory information"
+          pwd
+          ls -a
+          ./gradlew clean build
 
       - name: Clean temp directory
         run: |
