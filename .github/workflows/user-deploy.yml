@@ -60,7 +60,7 @@ jobs:
       - name: Build with Gradle
         run: |
           cd User
-          ./gradlew clean build
+          ./gradlew clean build --scan
 
       - name: Clean temp directory
         run: |
