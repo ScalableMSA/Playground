@@ -40,7 +40,8 @@ jobs:
           touch ./application.properties
           
           echo "${{ secrets.YML }}" >> ./application.properties
-          echo "${{secrets.ROOT_PASSWORD}}" #FOR TEST
+          cat application.properties
+          echo "${{ secrets.ROOT_PASSWORD }}" #FOR TEST
 
       - name: configure for MySQL
         uses: mirromutth/mysql-action@v1.1
