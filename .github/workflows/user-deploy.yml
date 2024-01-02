@@ -36,7 +36,9 @@ jobs:
         run: chmod +x User/gradlew
       
       - name: Build with Gradle
-        run: User/gradlew clean build
+        run: |
+          cd User
+          gradlew clean build
 
       - name: Clean temp directory
         run: |
