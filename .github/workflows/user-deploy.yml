@@ -42,9 +42,8 @@ jobs:
           pwd
           ls -a
           echo "MAKING PROPERTIES"
-          echo "${{ secrets.YML }}" >> ./application.properties
+          echo "${{ secrets.USER_APPLICATIONPROPERTIES }}" >> ./application.properties
           cat application.properties
-          echo "${{ secrets.RDS_USER_PASSWORD }}" #FOR TEST
 
       - name: configure for MySQL
         uses: mirromutth/mysql-action@v1.1
@@ -78,8 +77,8 @@ jobs:
       - name: AWS configure credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.USER_ACCESS }}
+          aws-secret-access-key: ${{ secrets.USER_SECRET_ACCESS }}
           aws-region: ap-northeast-2
           
       - name: upload to S3
