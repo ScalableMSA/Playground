@@ -62,11 +62,6 @@ jobs:
           cd User
           ./gradlew clean --stacktrace --info --exclude-task test build
 
-      - name: Clean temp directory
-        run: |
-          rm -rf *
-          cp -r $GITHUB_WORKSPACE . 
-        
       - name: archive drcloud 
         run: tar cvfz ./drcloud.tar.gz *
          
