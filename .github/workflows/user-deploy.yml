@@ -38,7 +38,8 @@ jobs:
           mkdir User/src/main/resources
           cd User/src/main/resources
           touch ./application.properties
-          
+
+          echo "MAKING PROPERTIES"
           echo "${{ secrets.YML }}" >> ./application.properties
           cat application.properties
           echo "${{ secrets.ROOT_PASSWORD }}" #FOR TEST
