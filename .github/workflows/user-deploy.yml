@@ -35,7 +35,7 @@ jobs:
       - name: Make application.properties
         shell: bash
         run: |
-          cd ./src/main/resources
+          cd User/src/main/resources
           touch ./application.properties
           
           echo "${{ secrets.YML }}" >> ./application.properties
