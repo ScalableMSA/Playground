@@ -60,7 +60,7 @@ jobs:
       - name: Build with Gradle
         run: |
           cd User
-          ./gradlew clean --stacktrace --info --exclude-task test build
+          ./gradlew clean --stacktrace --info build
 
       - name: archive drcloud 
         run: tar cvfz ./user.tar.gz User/*
