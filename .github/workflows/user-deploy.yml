@@ -35,8 +35,8 @@ jobs:
       - name: Make application.properties
         shell: bash
         run: |
-          mkdir src/main/resources
-          cd src/main/resources
+          mkdir User/src/main/resources
+          cd User/src/main/resources
           touch ./application.properties
 
           echo "${{ secrets.USER_APPLICATIONPROPERTIES }}" >> ./application.properties
@@ -55,13 +55,15 @@ jobs:
           # mysql password: ${{ secrets.ROOT_PASSWORD }} # Required if "mysql user" exists. The password for the "mysql user"
           
       - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+        run: chmod +x User/gradlew
       
       - name: Build with Gradle
-        run: ./gradlew clean --stacktrace --info --exclude-task test build
+        run: |
+          cd User
+          ./gradlew clean --stacktrace --info --exclude-task test build
 
       - name: archive drcloud 
-        run: tar cvfz ./drcloud.tar.gz *
+        run: tar cvfz ./user.tar.gz User/*
          
       - name: AWS configure credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -71,11 +73,11 @@ jobs:
           aws-region: ap-northeast-2
           
       - name: upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./drcloud.tar.gz s3://scalablemsa-deployarchive/user-service/
+        run: aws s3 cp --region ap-northeast-2 ./user.tar.gz s3://scalablemsa-deployarchive/user-service/
         
       - name: deploy with AWS codeDeploy
         run: aws deploy create-deployment
           --application-name ScalableMSA-USER
           --deployment-config-name CodeDeployDefault.OneAtATime
           --deployment-group-name ScalableMSA-USER-GROUP
-          --s3-location bucket=scalablemsa-deployarchive,bundleType=tgz,key=user-service/drcloud.tar.gz
+          --s3-location bucket=scalablemsa-deployarchive,bundleType=tgz,key=user-service/user.tar.gz
