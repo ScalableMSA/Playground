@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-REPOSITORY=/home/ubuntu/myapp
+REPOSITORY=/home/ec2-user/Playground/User
 LOG_FILE=$REPOSITORY/log.txt
 
 echo "deploy.sh 시작" | sudo tee -a $LOG_FILE
