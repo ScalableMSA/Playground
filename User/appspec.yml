@@ -1,0 +1,17 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/Playground/User
+permissions:
+  - object: /home/ubuntu/Playground/User
+    owner: ubuntu
+    group: ubuntu
+    mode: 755
+
+hooks:
+  AfterInstall:
+    - location: deploy-user.sh
+      timeout: 60
+      runas: root

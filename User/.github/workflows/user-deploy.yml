@@ -35,8 +35,8 @@ jobs:
       - name: Make application.properties
         shell: bash
         run: |
-          mkdir User/src/main/resources
-          cd User/src/main/resources
+          mkdir src/main/resources
+          cd src/main/resources
           touch ./application.properties
 
           echo "${{ secrets.USER_APPLICATIONPROPERTIES }}" >> ./application.properties
@@ -55,12 +55,10 @@ jobs:
           # mysql password: ${{ secrets.ROOT_PASSWORD }} # Required if "mysql user" exists. The password for the "mysql user"
           
       - name: Grant execute permission for gradlew
-        run: chmod +x User/gradlew
+        run: chmod +x ./gradlew
       
       - name: Build with Gradle
-        run: |
-          cd User
-          ./gradlew clean --stacktrace --info --exclude-task test build
+        run: ./gradlew clean --stacktrace --info --exclude-task test build
 
       - name: archive drcloud 
         run: tar cvfz ./drcloud.tar.gz *
