@@ -24,7 +24,7 @@ else
 fi
 
 # 실행 및 로그 저장
-nohup java -jar -Dspring.profiles.active=prod "$JAR_PATH" > jarExecute.log 2>&1 < /dev/null &
+nohup java -jar -Dspring.profiles.active=prod -Dapp.name=$APP_NAME "$JAR_PATH" > jarExecute.log 2>&1 < /dev/null &
 
 # 실행된 프로세스ID 확인
 RUNNING_PROCESS=$(ps aux | grep java | grep "$JAR_NAME")
