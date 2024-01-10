@@ -1,10 +1,7 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # User브랜치의 내용만 CI
   push:
     branches: [ "User" ]
   pull_request:
@@ -13,11 +10,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# This workflow contains a single job called "build"
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
+    # runner의 종류
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -25,41 +21,40 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
+      - name: JDK 17 설치
+        uses: actions/setup-java@v4.0.0
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'zulu'
 
-      - name: Make application.properties
-        shell: bash
-        run: |
-          mkdir User/src/main/resources
-          cd User/src/main/resources
-          touch ./application.properties
-
-          echo "${{ secrets.USER_APPLICATIONPROPERTIES }}" >> ./application.properties
-
-      - name: configure for MySQL
+      - name: MySQL 설정
         uses: mirromutth/mysql-action@v1.1
         with:
-          host port: 3306 # Optional, default value is 3306. The port of host
-          container port: 3306 # Optional, default value is 3306. The port of container
-          # character set server: 'utf8' # Optional, default value is 'utf8mb4'. The '--character-set-server' option for mysqld
-          # collation server: 'utf8_general_ci' # Optional, default value is 'utf8mb4_general_ci'. The '--collation-server' option for mysqld
-          # mysql version: '8.0' # Optional, default value is "latest". The version of the MySQL
+          # host port: 3306 # default value is 3306. The port of host
+          # container port: 3306 # default value is 3306. The port of container
+          character set server: 'utf8' #default value is 'utf8mb4'
+          collation server: 'utf8_general_ci' # default value is 'utf8mb4_general_ci'. The '--collation-server' option for mysqld
+          mysql version: '8.0.33' # Optional, default value is "latest". The version of the MySQL
           # mysql database: 'some_test' # Optional, default value is "test". The specified database which will be create
-          mysql root password: ${{ secrets.RDS_USER_PASSWORD }} # Required if "mysql user" is empty, default is empty. The root superuser password
-          # mysql user: admin # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
-          # mysql password: ${{ secrets.ROOT_PASSWORD }} # Required if "mysql user" exists. The password for the "mysql user"
+          mysql root password: ${{ secrets.RDS_USER_PASSWORD }} # 이 항목을 작성하거나 아래 두 항목을 작성해야한다.
+          # mysql user: admin
+          # mysql password: ${{ secrets.ROOT_PASSWORD }}
+
+      - name: application.yml 생성
+        shell: bash
+        run: |
+          mkdir User/src/main/resources # 레포지토리에 여러 프로젝트가 존재하는 구조라 해당 프로젝트 폴더로 이동하여 수행한다.
+          cd User/src/main/resources
+          touch ./application.yml
+
+          echo "${{ secrets.USER_APPLICATIONYML }}" >> ./application.yml
           
       - name: Grant execute permission for gradlew
         run: chmod +x User/gradlew
       
       - name: Build with Gradle
         run: |
-          cd User
+          cd User # 레포지토리에 여러 프로젝트가 존재하는 구조라 해당 프로젝트 폴더로 이동하여 수행한다.
           ./gradlew clean --stacktrace --info build
 
       - name: archive drcloud 
@@ -77,7 +72,7 @@ jobs:
         
       - name: deploy with AWS codeDeploy
         run: aws deploy create-deployment
-          --application-name ScalableMSA-USER
+          --application-name codedeploy-user
           --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name ScalableMSA-USER-GROUP
+          --deployment-group-name deploy-group-user
           --s3-location bucket=scalablemsa-deployarchive,bundleType=tgz,key=user-service/user.tar.gz
