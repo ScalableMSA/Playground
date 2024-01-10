@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  # User브랜치의 내용만 CI
+  # User브랜치에서 일어난 push/pull request에 작동한다.
   push:
     branches: [ "User" ]
   pull_request:
@@ -13,7 +13,7 @@ on:
 # This workflow contains a single job called "build"
 jobs:
   build:
-    # runner의 종류
+    # machine which runner would use
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -27,23 +27,10 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
 
-      - name: MySQL 설정
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          # host port: 3306 # default value is 3306. The port of host
-          # container port: 3306 # default value is 3306. The port of container
-          character set server: 'utf8' #default value is 'utf8mb4'
-          collation server: 'utf8_general_ci' # default value is 'utf8mb4_general_ci'. The '--collation-server' option for mysqld
-          mysql version: '8.0.33' # Optional, default value is "latest". The version of the MySQL
-          # mysql database: 'some_test' # Optional, default value is "test". The specified database which will be create
-          mysql root password: ${{ secrets.RDS_USER_PASSWORD }} # 이 항목을 작성하거나 아래 두 항목을 작성해야한다.
-          # mysql user: admin
-          # mysql password: ${{ secrets.ROOT_PASSWORD }}
-
       - name: application.yml 생성
         shell: bash
         run: |
-          mkdir User/src/main/resources # 레포지토리에 여러 프로젝트가 존재하는 구조라 해당 프로젝트 폴더로 이동하여 수행한다.
+          mkdir User/src/main/resources
           cd User/src/main/resources
           touch ./application.yml
 
@@ -54,12 +41,13 @@ jobs:
       
       - name: Build with Gradle
         run: |
-          cd User # 레포지토리에 여러 프로젝트가 존재하는 구조라 해당 프로젝트 폴더로 이동하여 수행한다.
+          cd User
           ./gradlew clean --stacktrace --info build
 
-      - name: archive drcloud 
+      - name: archive repository #tar 명령어를 이용하여 User폴더 압축 
         run: tar cvfz ./user.tar.gz User/*
          
+        # github secret 이용하여 AWS설정
       - name: AWS configure credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -67,9 +55,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.USER_SECRET_ACCESS }}
           aws-region: ap-northeast-2
           
+        # 압축파일 이름, 버켓 이름 설정에 주의
       - name: upload to S3
         run: aws s3 cp --region ap-northeast-2 ./user.tar.gz s3://scalablemsa-deployarchive/user-service/
         
+        # codeDeploy 실행, 다양한 이름 설정에 주의
       - name: deploy with AWS codeDeploy
         run: aws deploy create-deployment
           --application-name codedeploy-user
