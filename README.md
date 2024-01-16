@@ -24,6 +24,7 @@
     - ip : 43.200.8.28
   - CI : `Github Action`, `AWS S3`
   - CD : `AWS CodeDeploy`, `Shell Script`
+  - BE : `Java`, `Spring`, `Hibernate(JPA)`
   - DB : `AWS RDS`
     - table : scalablemsa_user(id, name, signed_date) 
   - 추가된 API :  `user/check`, `user/list`
